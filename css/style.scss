@@ -1,0 +1,45 @@
+//variable declaration in list form fot links only
+$a-tags: 'a, a:active, a:hover, a:visited, a:active, a:hover';
+
+body{
+  margin-top:20px;
+  background-color:#252525;
+  margin-bottom:2em;
+
+  .container-fluid{
+    margin-left: 5%;
+    margin-right: 5%;
+    color:white;
+    //for title div
+    .title{
+      font-size: 2em;
+      background-color: darkGreen;
+    }
+    //include all table formats
+    .table{
+      background-color: white;
+      color:black;
+      #{$a-tags} {
+        color: darkGreen;
+      }
+      //user pic too big
+      .userPic{
+        width:30px;
+        height:30px;
+      }
+      //center call row entries except user
+      td,th{
+        text-align: center;
+      }
+      .user{
+        text-align: justify;
+      }
+    }
+    #info{
+      #{$a-tags} {
+        color: yellow;
+        text-decoration: none;
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+body {
+  margin-top: 20px;
+  background-color: #252525;
+  margin-bottom: 2em;
+}
+
+body .container-fluid {
+  margin-left: 5%;
+  margin-right: 5%;
+  color: white;
+}
+
+body .container-fluid .title {
+  font-size: 2em;
+  background-color: darkGreen;
+}
+
+body .container-fluid .table {
+  background-color: white;
+  color: black;
+}
+
+body .container-fluid .table a, body .container-fluid .table a:active, body .container-fluid .table a:hover, body .container-fluid .table a:visited, body .container-fluid .table a:active, body .container-fluid .table a:hover {
+  color: darkGreen;
+}
+
+body .container-fluid .table .userPic {
+  width: 30px;
+  height: 30px;
+}
+
+body .container-fluid .table td, body .container-fluid .table th {
+  text-align: center;
+}
+
+body .container-fluid .table .user {
+  text-align: justify;
+}
+
+body .container-fluid #info a, body .container-fluid #info a:active, body .container-fluid #info a:hover, body .container-fluid #info a:visited, body .container-fluid #info a:active, body .container-fluid #info a:hover {
+  color: yellow;
+  text-decoration: none;
+}
