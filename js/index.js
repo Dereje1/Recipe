@@ -1,51 +1,66 @@
 class Main extends React.Component{
   constructor(props){
     super(props)
-    this.state=
-      {
-        "Pumpkin Pie":["Pumpkin Puree","Sweetened Condensed Milk","Eggs","Pumpkin Pie Spice","Pie Crust"],
-        "Spaghetti":["Noodles","Tomato Sauce","(Optional) Meatballs"],
-        "Onion Pie":["Onion","Pie Crust","Sounds Yummy right?"]
-      }
+    this.state={
+      "full":
+        {
+          "Pumpkin Pie":["Pumpkin Puree","Sweetened Condensed Milk","Eggs","Pumpkin Pie Spice","Pie Crust"],
+          "Spaghetti":["Noodles","Tomato Sauce","(Optional) Meatballs"],
+          "Onion Pie":["Onion","Pie Crust","Sounds Yummy right?"]
+        }
+
+    }
+
+      this.myCallBack=this.myCallBack.bind(this)
   }
- 
+
+ myCallBack(){
+   this.forceUpdate();
+   //this.setState({ "full": param });
+ }
   render(){
     return(
       <div>
-        <Recipe current={this.state}/>
+        <Recipe current={this.state.full} callBackFromMain={this.myCallBack} ></Recipe>
       </div>
     )
   }
 }
 
 class Recipe extends React.Component{
-  buttontest(){
-    alert("yes I got clicked")
+  constructor(props){
+    super(props)
+    this.buttontest=this.buttontest.bind(this)
+  }
+  buttontest(r){
+    console.log(r)
+    this.props.current[r].pop()
+    this.props.callBackFromMain();
+    //this.props.callBackFromMain=this.props.current
   }
 
   hashRecipe(currentState){
     var recipes = Object.keys(currentState).slice();
-    var x = [];
-    for(var i=0;i<recipes.length;i++){
-      x.push(
+    var x=recipes.map(r=>{
+      return(
         <article>
-          <h1>{recipes[i]}</h1>
-          <Ingredients ingrid={currentState[recipes[i]]}/>
-          <button onClick={this.buttontest}/>
+          <h1>{r}</h1>
+          <Ingredients ingrid={currentState[r]}/>
+          <button key={r} onClick={()=>this.buttontest(r)} className="btn" ></button>
         </article>
       )
-    }
+    })
     return x;
   }
   render(){
     return(
       <div>
         {this.hashRecipe(this.props.current)}
-
       </div>
     )
   }
 }
+
 
 class Ingredients extends React.Component{
   listParser(ings){
