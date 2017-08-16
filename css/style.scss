@@ -9,31 +9,10 @@ body{
   .container-fluid{
     margin-left: 5%;
     margin-right: 5%;
-    color:white;
+    color:black;
     //for title div
-    .title{
-      font-size: 2em;
-      background-color: darkGreen;
-    }
-    //include all table formats
-    .table{
-      background-color: white;
-      color:black;
-      #{$a-tags} {
-        color: darkGreen;
-      }
-      //user pic too big
-      .userPic{
-        width:30px;
-        height:30px;
-      }
-      //center call row entries except user
-      td,th{
-        text-align: center;
-      }
-      .user{
-        text-align: justify;
-      }
+    .recipeName{
+      color:darkgreen;
     }
     #info{
       #{$a-tags} {
