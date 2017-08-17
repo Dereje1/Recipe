@@ -3,6 +3,8 @@ var Button = ReactBootstrap.Button;
 var FormGroup = ReactBootstrap.FormGroup;
 var FormControl = ReactBootstrap.FormControl;
 var ControlLabel = ReactBootstrap.ControlLabel ;
+var Accordion = ReactBootstrap.Accordion ;
+var Panel = ReactBootstrap.Panel ;
 
 class Main extends React.Component{
   constructor(props){
@@ -15,11 +17,20 @@ class Main extends React.Component{
         }
 
       this.myCallBack=this.myCallBack.bind(this)
+      this.addRecipe=this.addRecipe.bind(this)
+  }
+
+  addRecipe(newInfo){
+    var x=newInfo.newIngridients.split(',')
+    x=x.filter(function(i){
+      if(i){return i;}
+    })
+    this.setState({ [newInfo.recipeName]: x})
+
   }
 
  myCallBack(change){
    if(change){
-     console.log(this.state)
      var x=change.newIngridients.split(',')
      x=x.filter(function(i){
        if(i){return i;}
@@ -33,8 +44,13 @@ class Main extends React.Component{
   render(){
     return(
       <div>
-        <Recipe current={this.state} callBackFromMain={this.myCallBack} ></Recipe>
-        <Button bsStyle="primary" bsSize="large">Add Recipe</Button>
+        <h1 id="boxtitle">Recipe Box</h1>
+        <div id="holder">
+          <Recipe current={this.state} callBackFromMain={this.myCallBack} ></Recipe>
+        </div>
+        <div id="buttonHolder">
+          <UserModal editInfo={["Add Recipe",""]} callBackFromMain={(newIngridients)=>this.addRecipe(newIngridients)}>Edit</UserModal>
+        </div>
       </div>
     )
   }
@@ -60,12 +76,15 @@ class Recipe extends React.Component{
     var recipes = Object.keys(currentState).slice();
     var x=recipes.map(r=>{
       return(
-        <article className="well">
-          <h1 className="recipeName">{r}</h1>
-          <Ingredients ingrid={currentState[r]}/>
-          <Button key={"Delete" + r} onClick={()=>this.deleteRecipe(r)} className="btn btn-danger">Delete</Button>
-          <UserModal editInfo={[r,currentState[r]]} callBackFromRecipe={(newIngridients)=>this.editRecipe(newIngridients)}>Edit</UserModal>
-        </article>
+        <Accordion>
+          <Panel header={r} eventKey={r}>
+            <Ingredients ingrid={currentState[r]}/>
+            <Button key={"Delete" + r} onClick={()=>this.deleteRecipe(r)} className="btn btn-danger">Delete</Button>
+            <div className="updateButton">
+              <UserModal editInfo={[r,currentState[r]]} callBackFromRecipe={(newIngridients)=>this.editRecipe(newIngridients)}>Edit</UserModal>
+            </div>
+          </Panel>
+        </Accordion>
       )
     })
     return x;
@@ -113,6 +132,7 @@ class UserModal extends React.Component{
     this.close=this.close.bind(this)
     this.update=this.update.bind(this)
     this.handleChange=this.handleChange.bind(this)
+    this.formRenderType=this.formRenderType.bind(this)
   }
   open(){
     this.setState({
@@ -130,19 +150,87 @@ class UserModal extends React.Component{
     });
   }
   update(){
-    this.props.callBackFromRecipe(this.state);
+    if(this.props.editInfo[0]!=="Add Recipe"){
+      this.props.callBackFromRecipe(this.state);
+    }
+    else{
+      this.props.callBackFromMain(this.state);
+    }
     //console.log(this)
     this.close();
   }
   handleChange(e){
     e.preventDefault()
-    this.setState({ newIngridients: e.target.value});
+    if(this.props.editInfo[0]!=="Add Recipe"){
+      this.setState({ newIngridients: e.target.value});
+    }
+    else{
+      if(e.target.id==="addRecipeText"){
+        this.setState({ recipeName: e.target.value});
+      }
+      else{
+        this.setState({ newIngridients: e.target.value});
+      }
+    }
+  }
+  formRenderType(){
+    if(this.props.editInfo[0]!=="Add Recipe"){
+      var formType= (
+              <FormGroup controlId="formBasicText">
+                <ControlLabel>Ingredients</ControlLabel>
+                <FormControl
+                  type="text"
+                  defaultValue={this.state.oldIngridients}
+                  onChange={this.handleChange}
+                />
+                <FormControl.Feedback />
+            </FormGroup>
+          )
+    }
+    else{
+      var formType= (
+              <div>
+                <FormGroup controlId="addRecipeText">
+                  <ControlLabel>New Recipe</ControlLabel>
+                  <FormControl
+                    type="text"
+                    defaultValue={this.state.oldIngridients}
+                    onChange={this.handleChange}
+                  />
+                  <FormControl.Feedback />
+                </FormGroup>
+                <FormGroup controlId="addIngridText">
+                  <ControlLabel>Ingredients</ControlLabel>
+                  <FormControl
+                    type="text"
+                    defaultValue={this.state.oldIngridients}
+                    onChange={this.handleChange}
+                  />
+                  <FormControl.Feedback />
+                </FormGroup>
+              </div>
+          )
+    }
+    return formType;
   }
   render(){
-
+    if(this.props.editInfo[0]!=="Add Recipe"){
+      var modalTitle= "Editing Ingredients For " + this.state.recipeName;
+      var buttonTitle = "Update Recipe";
+      var buttonType = "btn btn-info";
+      var openerButtonType = "btn";
+      var openerButtonSize = "";
+    }
+    else{
+      var modalTitle= "Add A New Recipe ";
+      var buttonTitle = "Add Recipe";
+      var buttonType = "btn btn-primary";
+      var openerButtonType = "btn btn-primary";
+      var openerButtonSize = "large";
+    }
     return(
       <div>
-      <Button className="btn btn-info" onClick={() => this.open()}>Edit</Button>
+      <Button bsStyle={openerButtonType} bsSize={openerButtonSize} onClick={() => this.open()}>{buttonTitle}</Button>
       <div className="modal-container">
         <Modal
           show={this.state.show}
@@ -151,23 +239,13 @@ class UserModal extends React.Component{
           aria-labelledby="contained-modal-title"
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title">{"Editing Ingredients For " + this.state.recipeName}</Modal.Title>
+            <Modal.Title id="contained-modal-title">{modalTitle}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          <FormGroup
-              controlId="formBasicText"
-            >
-              <ControlLabel>Working example with validation</ControlLabel>
-              <FormControl
-                type="text"
-                defaultValue={this.state.oldIngridients}
-                onChange={this.handleChange}
-              />
-              <FormControl.Feedback />
-          </FormGroup>
+          {this.formRenderType()}
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={this.update} className="btn btn-info">Edit Recipe</Button><Button onClick={this.close}>Close</Button>
+            <Button onClick={this.update} bsStyle={buttonType}>{buttonTitle}</Button><Button onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -175,6 +253,7 @@ class UserModal extends React.Component{
     )
   }
 }
+
 
 ReactDOM.render(
   <Main />,

@@ -10,11 +10,36 @@ body{
     margin-left: 5%;
     margin-right: 5%;
     color:black;
-    //for title div
-    .recipeName{
-      color:darkgreen;
+    #boxtitle{
+      font-family: 'Croissant One', cursive;
+      color:yellow;
+      text-align: center;
     }
+    #holder{
+      background-color: #ced4dd;
+      padding: 10px;
+      border-radius: 4px;
+      .panel-title{
+        color:darkgreen;
+        font-size: 30px;
+        font-family: 'Croissant One', cursive;
+        cursor: pointer;
+      }
+      .list-group-item{
+        font-size: 20px;
+        font-family: 'Courgette', cursive;
+      }
+      .updateButton{
+        display:inline-block;
+        margin-left: 5px;
+      }
+    }
+    #buttonHolder{
+      margin-top: 10px;
+    }
+
     #info{
+      color:white;
       #{$a-tags} {
         color: yellow;
         text-decoration: none;
