@@ -1,23 +1,23 @@
-var Modal = ReactBootstrap.Modal;
-var Button = ReactBootstrap.Button;
-var FormGroup = ReactBootstrap.FormGroup;
-var FormControl = ReactBootstrap.FormControl;
-var ControlLabel = ReactBootstrap.ControlLabel ;
-var Accordion = ReactBootstrap.Accordion ;
-var Panel = ReactBootstrap.Panel ;
-
 class Main extends React.Component{
   constructor(props){
     super(props)
-    this.state=
-        {
-          "Pumpkin Pie":["Pumpkin Puree","Sweetened Condensed Milk","Eggs","Pumpkin Pie Spice","Pie Crust"],
-          "Spaghetti":["Noodles","Tomato Sauce","(Optional) Meatballs"],
-          "Onion Pie":["Onion","Pie Crust","Sounds Yummy right?"]
-        }
+    if(localStorage.getItem('fullState')){
+      console.log(localStorage.getItem('fullState'))
+      this.state=JSON.parse(localStorage.getItem('fullState'))
+    }
+    else{
 
-      this.myCallBack=this.myCallBack.bind(this)
-      this.addRecipe=this.addRecipe.bind(this)
+      this.state=
+          {
+            "Pumpkin Pie":["Pumpkin Puree","Sweetened Condensed Milk","Eggs","Pumpkin Pie Spice","Pie Crust"],
+            "Spaghetti":["Noodles","Tomato Sauce","(Optional) Meatballs"],
+            "Onion Pie":["Onion","Pie Crust","Sounds Yummy right?"]
+          }
+    }
+
+    this.myCallBack=this.myCallBack.bind(this)
+    this.addRecipe=this.addRecipe.bind(this)
+    this.storeLocal=this.storeLocal.bind(this)
   }
 
   addRecipe(newInfo){
@@ -25,8 +25,7 @@ class Main extends React.Component{
     x=x.filter(function(i){
       if(i){return i;}
     })
-    this.setState({ [newInfo.recipeName]: x})
-
+    this.setState({[newInfo.recipeName]: x},this.storeLocal)
   }
 
  myCallBack(change){
@@ -35,27 +34,32 @@ class Main extends React.Component{
      x=x.filter(function(i){
        if(i){return i;}
      })
-     this.setState({ [change.recipeName]: x})
+     this.setState({ [change.recipeName]: x},this.storeLocal)
+
    }
    else{
-     this.forceUpdate();
+     this.forceUpdate(this.storeLocal);
    }
  }
-  render(){
-    return(
-      <div>
-        <h1 id="boxtitle">Recipe Box</h1>
-        <div id="holder">
-          <Recipe current={this.state} callBackFromMain={this.myCallBack} ></Recipe>
-        </div>
-        <div id="buttonHolder">
-          <UserModal editInfo={["Add Recipe",""]} callBackFromMain={(newIngridients)=>this.addRecipe(newIngridients)}>Edit</UserModal>
-        </div>
-      </div>
-    )
-  }
-}
 
+  storeLocal(){
+    localStorage.setItem('fullState', JSON.stringify(this.state));
+  }
+
+    render(){
+      return(
+        <div>
+          <h1 id="boxtitle">Recipe Box</h1>
+          <div id="holder">
+            <Recipe current={this.state} callBackFromMain={this.myCallBack} ></Recipe>
+          </div>
+          <div id="buttonHolder">
+            <UserModal editInfo={["Add Recipe",""]} callBackFromMain={(newIngridients)=>this.addRecipe(newIngridients)}>Edit</UserModal>
+          </div>
+        </div>
+      )
+    }
+  }
 class Recipe extends React.Component{
   constructor(props){
     super(props)
@@ -73,6 +77,9 @@ class Recipe extends React.Component{
   }
 
   hashRecipe(currentState){
+    var Accordion = ReactBootstrap.Accordion ;
+    var Panel = ReactBootstrap.Panel ;
+    var Button = ReactBootstrap.Button;
     var recipes = Object.keys(currentState).slice();
     var x=recipes.map(r=>{
       return(
@@ -118,7 +125,6 @@ class Ingredients extends React.Component{
   }
 
 }
-
 class UserModal extends React.Component{
   constructor(props){
     super(props)
@@ -174,6 +180,9 @@ class UserModal extends React.Component{
     }
   }
   formRenderType(){
+    var FormGroup = ReactBootstrap.FormGroup;
+    var FormControl = ReactBootstrap.FormControl;
+    var ControlLabel = ReactBootstrap.ControlLabel ;
     if(this.props.editInfo[0]!=="Add Recipe"){
       var formType= (
               <FormGroup controlId="formBasicText">
@@ -214,18 +223,20 @@ class UserModal extends React.Component{
     return formType;
   }
   render(){
+    var Modal = ReactBootstrap.Modal;
+    var Button = ReactBootstrap.Button;
     if(this.props.editInfo[0]!=="Add Recipe"){
       var modalTitle= "Editing Ingredients For " + this.state.recipeName;
       var buttonTitle = "Update Recipe";
-      var buttonType = "btn btn-info";
-      var openerButtonType = "btn";
+      var buttonType = "info";
+      var openerButtonType = "info";
       var openerButtonSize = "";
     }
     else{
       var modalTitle= "Add A New Recipe ";
       var buttonTitle = "Add Recipe";
       var buttonType = "btn btn-primary";
-      var openerButtonType = "btn btn-primary";
+      var openerButtonType = "warning";
       var openerButtonSize = "large";
     }
     return(
@@ -253,8 +264,6 @@ class UserModal extends React.Component{
     )
   }
 }
-
-
 ReactDOM.render(
   <Main />,
   document.getElementById("app")

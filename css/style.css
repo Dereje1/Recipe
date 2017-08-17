@@ -12,12 +12,13 @@ body .container-fluid {
 
 body .container-fluid #boxtitle {
   font-family: 'Croissant One', cursive;
-  color: yellow;
+  color: #b5d2d6;
+  font-size: 60px;
   text-align: center;
 }
 
 body .container-fluid #holder {
-  background-color: #ced4dd;
+  background-color: #b5d2d6;
   padding: 10px;
   border-radius: 4px;
 }
@@ -35,7 +36,7 @@ body .container-fluid #holder .list-group-item {
 }
 
 body .container-fluid #holder .updateButton {
-  display: inline-block;
+  display: inline-flex;
   margin-left: 5px;
 }
 
@@ -44,6 +45,7 @@ body .container-fluid #buttonHolder {
 }
 
 body .container-fluid #info {
+  margin-top: 30px;
   color: white;
 }
 

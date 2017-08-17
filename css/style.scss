@@ -1,6 +1,6 @@
 //variable declaration in list form fot links only
 $a-tags: 'a, a:active, a:hover, a:visited, a:active, a:hover';
-
+$divback: #b5d2d6;
 body{
   margin-top:20px;
   background-color:#252525;
@@ -12,11 +12,12 @@ body{
     color:black;
     #boxtitle{
       font-family: 'Croissant One', cursive;
-      color:yellow;
+      color:$divback;
+      font-size: 60px;
       text-align: center;
     }
     #holder{
-      background-color: #ced4dd;
+      background-color: $divback;
       padding: 10px;
       border-radius: 4px;
       .panel-title{
@@ -30,7 +31,7 @@ body{
         font-family: 'Courgette', cursive;
       }
       .updateButton{
-        display:inline-block;
+        display:inline-flex;
         margin-left: 5px;
       }
     }
@@ -39,6 +40,7 @@ body{
     }
 
     #info{
+      margin-top: 30px;
       color:white;
       #{$a-tags} {
         color: yellow;
